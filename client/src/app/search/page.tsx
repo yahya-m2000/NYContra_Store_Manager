@@ -70,7 +70,7 @@ export default function Search({
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/products/?id=${selectedItem._id}`,
+        `${process.env.API_URL}?id=${selectedItem._id}`,
         {
           method: "DELETE",
         }

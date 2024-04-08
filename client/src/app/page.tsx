@@ -27,7 +27,7 @@ export default function Home() {
   };
   const handleAddData = () => {
     // Function to handle adding new data
-    fetch("http://localhost:3001/api/products/", {
+    fetch(process.env.API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

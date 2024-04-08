@@ -108,7 +108,7 @@ export default function FormModal() {
 
   const handleSubmit = async (formData: any) => {
     try {
-      const response = await fetch("http://localhost:3001/api/products/", {
+      const response = await fetch(process.env.API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

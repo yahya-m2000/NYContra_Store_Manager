@@ -121,7 +121,7 @@ const UpdateFormModal: React.FC<UpdateFormModalProps> = ({
     try {
       console.log(selectedItem._id);
       const response = await fetch(
-        `http://localhost:3001/api/products/?id=${selectedItem._id}`,
+        `${process.env.API_URL}?id=${selectedItem._id}`,
         {
           method: "PUT",
           headers: {
