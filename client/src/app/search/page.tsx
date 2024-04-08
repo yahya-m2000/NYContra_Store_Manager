@@ -33,7 +33,7 @@ interface SearchProps {
   handleSearch: any;
 }
 
-export default function Search({
+export function Search({
   setSearchTerm,
   searchTerm,
   handleSearch,
