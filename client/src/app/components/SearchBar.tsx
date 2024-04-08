@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -48,15 +48,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchBar() {
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const handleSearch = () => {
-    if (searchTerm.trim() !== "") {
-      const query = encodeURIComponent(searchTerm.trim());
-      router.push(`/search?name=${query}`);
+interface SearchBarProps {
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  handleSearch: () => void;
+  searchTerm: string;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({
+  setSearchTerm,
+  handleSearch,
+  searchTerm,
+}) => {
+  const router = useRouter();
+
+  const handleKeyPress = (ev: React.KeyboardEvent<HTMLInputElement>) => {
+    if (ev.key === "Enter") {
+      ev.preventDefault();
+      handleSearch();
     }
   };
-  const router = useRouter();
 
   return (
     <Box>
@@ -70,16 +80,11 @@ export default function SearchBar() {
           id="outlined-basic"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={(ev) => {
-            console.log(`Pressed keyCode ${ev.key}`);
-            if (ev.key === "Enter") {
-              // Do code here
-              ev.preventDefault();
-              handleSearch();
-            }
-          }}
+          onKeyDown={handleKeyPress}
         />
       </Search>
     </Box>
   );
-}
+};
+
+export default SearchBar;
