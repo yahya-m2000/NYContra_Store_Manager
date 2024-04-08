@@ -1,17 +1,21 @@
 "use client";
 import * as React from "react";
+import { useRouter } from "next/navigation";
 
 //
 
 import { Box, Button, TextField, Typography } from "@mui/material";
-import FormModal from "./components/FormModal";
+import FormModal from "./components/AddFormModal";
+import AppBar from "./components/NavBar";
+import SearchBar from "./components/SearchBar";
 
-export default function Home() {
+export default function Home({ setSearchTerm, searchTerm, handleSearch }) {
   const [formData, setFormData] = React.useState(""); // State to hold form data
+  const router = useRouter();
 
   const handleAddData = () => {
     // Function to handle adding new data
-    fetch("your_api_endpoint_here", {
+    fetch("http://localhost:3001/api/products/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,11 +64,27 @@ export default function Home() {
           justifyContent="center"
           margin={2}
         >
-          <TextField
+          {/* <TextField
             id="outlined-basic"
-            placeholder="Nike Airforce 1"
-            label="Get Data"
+            placeholder="Search by name..."
+            label="Search"
             variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(ev) => {
+              console.log(`Pressed keyCode ${ev.key}`);
+              if (ev.key === "Enter") {
+                // Do code here
+                ev.preventDefault();
+                handleSearch();
+              }
+            }}
+          /> */}
+
+          <SearchBar
+            handleSearch={handleSearch}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
           />
         </Box>
         <Box

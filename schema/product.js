@@ -33,7 +33,7 @@ const productSchema = new mongoose.Schema({
       required: true,
     },
   ],
-  color: [
+  colors: [
     {
       type: String,
       required: true,
@@ -42,10 +42,6 @@ const productSchema = new mongoose.Schema({
   gender: {
     type: String,
     enum: ["male", "female", "unisex"],
-    required: true,
-  },
-  material: {
-    type: String,
     required: true,
   },
   createdAt: {

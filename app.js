@@ -2,6 +2,7 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const productRoutes = require("./routes/productRoutes");
+const cors = require("cors");
 
 // Initialize Express app
 const app = express();
@@ -11,6 +12,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Routes
 app.use("/api/products", productRoutes);
