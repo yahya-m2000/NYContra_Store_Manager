@@ -83,7 +83,7 @@ exports.addProduct = async (req, res) => {
 
 exports.deleteProductById = async (req, res) => {
   try {
-    const productIds = req.query.ids.split(",");
+    const productIds = req.query.id;
 
     // Find and delete products by IDs
     const deletedProducts = await Product.deleteMany({
