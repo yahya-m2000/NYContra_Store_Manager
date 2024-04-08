@@ -27,7 +27,17 @@ interface SearchResult {
   category: string;
 }
 
-export default function Search({ setSearchTerm, searchTerm, handleSearch }) {
+interface SearchProps {
+  setSearchTerm: any;
+  searchTerm: any;
+  handleSearch: any;
+}
+
+export default function Search({
+  setSearchTerm,
+  searchTerm,
+  handleSearch,
+}: SearchProps) {
   const [searchResults, setSearchResults] = React.useState<SearchResult[]>([]);
   const [selectedItem, setSelectedItem] = React.useState<SearchResult | null>(
     null

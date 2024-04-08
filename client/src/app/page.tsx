@@ -9,7 +9,17 @@ import FormModal from "./components/AddFormModal";
 import AppBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
 
-export default function Home({ setSearchTerm, searchTerm, handleSearch }) {
+interface HomeProps {
+  setSearchTerm: any;
+  searchTerm: any;
+  handleSearch: any;
+}
+
+export default function Home({
+  setSearchTerm,
+  searchTerm,
+  handleSearch,
+}: HomeProps) {
   const [formData, setFormData] = React.useState(""); // State to hold form data
   const router = useRouter();
 
