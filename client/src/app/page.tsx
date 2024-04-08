@@ -15,14 +15,16 @@ interface HomeProps {
   handleSearch: any;
 }
 
-export default function Home({
-  setSearchTerm,
-  searchTerm,
-  handleSearch,
-}: HomeProps) {
+export default function Home() {
   const [formData, setFormData] = React.useState(""); // State to hold form data
   const router = useRouter();
-
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const handleSearch = () => {
+    if (searchTerm.trim() !== "") {
+      const query = encodeURIComponent(searchTerm.trim());
+      router.push(`/search?name=${query}`);
+    }
+  };
   const handleAddData = () => {
     // Function to handle adding new data
     fetch("http://localhost:3001/api/products/", {
