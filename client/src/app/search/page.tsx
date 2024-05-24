@@ -84,34 +84,9 @@ export default function Search() {
 
   React.useEffect(() => {
     const query = searchParams.get("name") || "all";
-    const page = searchParams.get("page") || 1;
+    const page = searchParams.get("page") || "1"; // Ensure page is a string
     fetchSearchResults(query, parseInt(page));
   }, [searchParams, setLoading, setSearchResults]);
-  //   if (!selectedItem) return;
-
-  //   const deleteItem = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `${process.env.NEXT_PUBLIC_API_URL}/?id=${selectedItem.id}`,
-  //         {
-  //           method: "DELETE",
-  //         }
-  //       );
-  //       if (!response.ok) {
-  //         throw new Error("Failed to delete item");
-  //       }
-  //       // Remove the deleted item from the search results
-  //       setSearchResults((prevResults) =>
-  //         prevResults.filter((result) => result.id !== selectedItem.id)
-  //       );
-  //       setSelectedItem(null); // Clear the selectedItem state
-  //     } catch (error) {
-  //       console.error("Error deleting item:", error);
-  //     }
-  //   };
-
-  //   deleteItem();
-  // }, [selectedItem, setSearchResults]);
 
   return (
     <React.Fragment>
