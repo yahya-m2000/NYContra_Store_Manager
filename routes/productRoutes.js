@@ -8,9 +8,6 @@ const productController = require("../controllers/productController");
 // get a product by querying key
 router.get("/", productController.getQueryProducts);
 
-// get all products
-router.get("/", productController.getAllProducts);
-
 // add a new product
 router.post("/", productController.addProduct);
 

@@ -1,26 +1,12 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
-import { useSearchParams, useRouter } from "next/navigation";
-import { Button } from "@mui/material";
+
+import { useRouter } from "next/navigation";
 import { ArrowBack } from "@mui/icons-material";
+import { Typography, Toolbar, Box, AppBar } from "@mui/material";
+
 import SearchBar from "./SearchBar";
 
-interface NavBarProps {
-  setSearchTerm: any;
-  searchTerm: any;
-  handleSearch: any;
-}
-
-export default function NavBar({
-  setSearchTerm,
-  searchTerm,
-  handleSearch,
-}: NavBarProps) {
+export default function NavBar() {
   const router = useRouter();
 
   return (
@@ -52,16 +38,12 @@ export default function NavBar({
                   display: { xs: "none", sm: "block" },
                   cursor: "pointer",
                 }}
-                onClick={() => router.push(`http://localhost:3000`)}
+                onClick={() => router.push(`${process.env.NEXT_PUBLIC_URL}`)}
               >
                 NYCONTRA CMS
               </Typography>
             </Box>
-            <SearchBar
-              setSearchTerm={setSearchTerm}
-              searchTerm={searchTerm}
-              handleSearch={handleSearch}
-            />
+            <SearchBar />
             <Box />
           </Box>
         </Toolbar>

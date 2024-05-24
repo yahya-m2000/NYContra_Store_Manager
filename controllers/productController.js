@@ -2,44 +2,38 @@ const Product = require("../schema/product");
 
 exports.getQueryProducts = async (req, res) => {
   try {
-    const query = req.query;
-    let filter = {};
+    const { page = 1, limit = 10, name, ...otherFilters } = req.query;
+    const skip = (page - 1) * limit;
 
-    // Set default values for pagination and limiting
-    let page = query.page ? parseInt(query.page) : 1;
-    let limit = query.limit ? parseInt(query.limit) : 10;
+    // Create a filters object
+    let filters = { ...otherFilters };
 
-    // Calculate the number of documents to skip
-    let skip = (page - 1) * limit;
-
-    for (const key in query) {
-      if (key === "page" || key === "limit") {
-        continue;
-      }
-
-      filter[key] = query[key];
+    // Add a regex search for the name field if it exists in the query
+    if (name) {
+      filters.name = new RegExp(name, "i"); // 'i' makes it case-insensitive
     }
 
-    const products = await Product.find(filter).skip(skip).limit(limit).exec();
+    const products = await Product.find(filters)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .exec();
+
+    const totalProducts = await Product.countDocuments(filters);
+    const totalPages = Math.ceil(totalProducts / limit);
 
     if (!products || products.length === 0) {
       return res.status(404).json({ message: "Products not found" });
     }
 
-    return res.json(products);
+    return res.json({
+      products,
+      totalPages,
+      currentPage: page,
+      totalProducts,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
-  }
-};
-
-exports.getAllProducts = async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -53,9 +47,12 @@ exports.addProduct = async (req, res) => {
       brand,
       images,
       sizes,
-      color,
+      colors,
       gender,
       material,
+      shippingPolicy,
+      isHidden,
+      inStock,
     } = req.body;
 
     const newProduct = new Product({
@@ -66,9 +63,12 @@ exports.addProduct = async (req, res) => {
       brand,
       images,
       sizes,
-      color,
+      colors,
       gender,
       material,
+      shippingPolicy,
+      isHidden,
+      inStock,
     });
 
     // Save the product to the database

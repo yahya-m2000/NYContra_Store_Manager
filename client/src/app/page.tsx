@@ -1,54 +1,13 @@
 "use client";
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { Box, Typography } from "@mui/material";
 
-//
-
-import { Box, Button, TextField, Typography } from "@mui/material";
-import FormModal from "./components/AddFormModal";
-import AppBar from "./components/NavBar";
-import SearchBar from "./components/SearchBar";
-
-interface HomeProps {
-  setSearchTerm: any;
-  searchTerm: any;
-  handleSearch: any;
-}
+import FormModal from "../components/FormModal";
+import SearchBar from "../components/SearchBar";
 
 export default function Home() {
-  const [formData, setFormData] = React.useState(""); // State to hold form data
-  const router = useRouter();
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const handleSearch = () => {
-    if (searchTerm.trim() !== "") {
-      const query = encodeURIComponent(searchTerm.trim());
-      router.push(`/search?name=${query}`);
-    }
-  };
-  const handleAddData = () => {
-    // Function to handle adding new data
-    fetch(process.env.API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ data: formData }), // Send form data to the API
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Handle response from the API
-        console.log("Data added successfully:", data);
-        // Optionally, you can reset the form after successful addition
-        setFormData("");
-      })
-      .catch((error) => {
-        // Handle any errors
-        console.error("Error adding data:", error);
-      });
-  };
-
   return (
-    <main>
+    <React.Fragment>
       <Box
         component="section"
         display="flex"
@@ -76,33 +35,11 @@ export default function Home() {
           justifyContent="center"
           margin={2}
         >
-          {/* <TextField
-            id="outlined-basic"
-            placeholder="Search by name..."
-            label="Search"
-            variant="outlined"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(ev) => {
-              console.log(`Pressed keyCode ${ev.key}`);
-              if (ev.key === "Enter") {
-                // Do code here
-                ev.preventDefault();
-                handleSearch();
-              }
-            }}
-          /> */}
-
-          <SearchBar
-            handleSearch={handleSearch}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-          />
+          <SearchBar />
         </Box>
         <Box
           component="section"
           display="flex"
-          // width={"50vh"}
           flexDirection={"row"}
           alignItems="center"
           justifyContent="center"
@@ -110,6 +47,6 @@ export default function Home() {
           <FormModal />
         </Box>
       </Box>
-    </main>
+    </React.Fragment>
   );
 }

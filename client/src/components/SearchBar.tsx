@@ -3,7 +3,7 @@ import { styled, alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-
+import { GlobalStateContext } from "../context/GlobalStateContext";
 import { useRouter } from "next/navigation";
 
 const Search = styled("div")(({ theme }) => ({
@@ -48,23 +48,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-interface SearchBarProps {
-  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  handleSearch: () => void;
-  searchTerm: string;
-}
-
-const SearchBar: React.FC<SearchBarProps> = ({
-  setSearchTerm,
-  handleSearch,
-  searchTerm,
-}) => {
+const SearchBar: React.FC = ({}) => {
   const router = useRouter();
+  const { searchTerm, setSearchTerm } =
+    (React.useContext(GlobalStateContext) as GlobalState) || {};
 
   const handleKeyPress = (ev: React.KeyboardEvent<HTMLInputElement>) => {
     if (ev.key === "Enter") {
       ev.preventDefault();
       handleSearch();
+    }
+  };
+
+  const handleSearch = () => {
+    if (searchTerm.trim() !== "") {
+      const query = encodeURIComponent(searchTerm.trim());
+      router.push(`/search?name=${query}`);
     }
   };
 

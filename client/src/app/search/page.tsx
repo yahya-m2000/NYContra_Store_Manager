@@ -1,76 +1,54 @@
 "use client";
 import * as React from "react";
-
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { Box, Container } from "@mui/material";
-import Button from "@mui/material/Button";
-import NavBar from "../components/NavBar";
-import UpdateFormModal from "../components/UpdateFormModal";
 import { useSearchParams } from "next/navigation";
+import { SearchContext } from "@/context/SearchContext";
+import {
+  Box,
+  Typography,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Card,
+  Button,
+  Pagination,
+} from "@mui/material";
+import NavBar from "../../components/NavBar";
+import UpdateFormModal from "../../components/UpdateFormModal";
 
-interface SearchResult {
-  _id: any;
-  name: string;
-  price: string;
-  brand: string;
-  colors: any;
-  createdAt: string;
-  gender: string;
-  images: React.ReactNode;
-  sizes: React.ReactNode;
-  updatedAt: string;
-  description: string;
-  category: string;
-}
+export default function Search() {
+  const {
+    setTotalPages,
+    setCurrentPage,
+    totalPages,
+    currentPage,
+    searchResults,
+    setSearchResults,
+    selectedItem,
+    setSelectedItem,
+    loading,
+    setLoading,
+    isUpdateModalOpen,
+    setUpdateModalOpen,
+  } = React.useContext(SearchContext) as SearchContextType;
 
-interface SearchProps {
-  setSearchTerm: any;
-  searchTerm: any;
-  handleSearch: any;
-}
-
-export function Search({
-  setSearchTerm,
-  searchTerm,
-  handleSearch,
-}: SearchProps) {
-  const [searchResults, setSearchResults] = React.useState<SearchResult[]>([]);
-  const [selectedItem, setSelectedItem] = React.useState<SearchResult | null>(
-    null
-  );
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [isUpdateModalOpen, setUpdateModalOpen] =
-    React.useState<boolean>(false);
-
-  const searchParams = useSearchParams(); // Call useSearchParams directly inside the function component
+  const searchParams = useSearchParams();
 
   const handleCloseModal = () => {
     setSelectedItem(null);
-    setUpdateModalOpen(false); // Close the modal
+    setUpdateModalOpen(false);
   };
 
-  const handleUpdateClick = (item: SearchResult) => {
+  const handleOpenModal = (item: SearchContextType) => {
     setSelectedItem(item);
-    setUpdateModalOpen(true); // Open the modal when the update button is clicked
+    setUpdateModalOpen(true);
     console.log("Updating item:", item);
-    // console.log("Selected item:", selectedItem);
   };
 
-  const handleDeleteClick = async (item: SearchResult) => {
-    try {
-      setSelectedItem(item);
-      console.log("Deleting item:", item);
-    } catch (error) {
-      if (!selectedItem) return console.log("No item selected");
-    }
-
+  const handleDeleteClick = async (item: SearchContextType) => {
+    console.log("Deleting item:", item);
     try {
       const response = await fetch(
-        `${process.env.API_URL}?id=${selectedItem._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/?id=${item.id}`,
         {
           method: "DELETE",
         }
@@ -80,56 +58,82 @@ export function Search({
       }
       // Remove the deleted item from the search results
       setSearchResults((prevResults) =>
-        prevResults.filter((result) => result._id !== selectedItem._id)
+        prevResults.filter((result) => result.id !== item.id)
       );
-      setSelectedItem(null); // Clear the selectedItem state
     } catch (error) {
       console.error("Error deleting item:", error);
     }
   };
 
-  React.useEffect(() => {
-    const fetchSearchResults = async () => {
-      try {
-        const query = searchParams.get("name") as string; // Get search query from URL
-        console.log("Query:", query); // Log the query to see if it's correctly retrieved
-        if (!query) return;
+  const fetchSearchResults = async (query: string, page: number) => {
+    try {
+      const limit = 10; // You can set this to any value you prefer
+      const url =
+        query === "all"
+          ? `${process.env.NEXT_PUBLIC_API_URL}?page=${page}&limit=${limit}`
+          : `${process.env.NEXT_PUBLIC_API_URL}/?name=${query}&page=${page}&limit=${limit}`;
 
-        // Perform search query
-        if (query === "all") {
-          const response = await fetch(`http://localhost:3001/api/products/`);
-          console.log("Response:", response); // Log the response to see if it's successful
-          if (!response.ok) {
-            throw new Error("Failed to fetch search results");
-          }
-          const data = await response.json();
-          console.log("Data:", data); // Log the data received from the API
-          setSearchResults(data);
-          setLoading(false);
-        } else {
-          const response = await fetch(
-            `http://localhost:3001/api/products/?name=${query}`
-          );
-          console.log("Response:", response); // Log the response to see if it's successful
-          if (!response.ok) {
-            throw new Error("Failed to fetch search results");
-          }
-          const data = await response.json();
-          console.log("Data:", data); // Log the data received from the API
-          setSearchResults(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-        setLoading(false);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch search results");
       }
-    };
 
-    fetchSearchResults();
-  }, [searchParams]);
+      const data = await response.json();
+      setSearchResults(data.products);
+      setTotalPages(data.totalPages);
+      setCurrentPage(data.currentPage);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      setLoading(false);
+    }
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    newPage: number
+  ) => {
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.set("page", newPage.toString());
+    window.history.pushState({}, "", `?${queryParams.toString()}`);
+    fetchSearchResults(queryParams.get("name") || "all", newPage);
+  };
+
+  React.useEffect(() => {
+    const query = searchParams.get("name") || "all";
+    const page = searchParams.get("page") || 1;
+    fetchSearchResults(query, parseInt(page));
+  }, [searchParams, setLoading, setSearchResults]);
+
+  // React.useEffect(() => {
+  //   if (!selectedItem) return;
+
+  //   const deleteItem = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.NEXT_PUBLIC_API_URL}/?id=${selectedItem.id}`,
+  //         {
+  //           method: "DELETE",
+  //         }
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error("Failed to delete item");
+  //       }
+  //       // Remove the deleted item from the search results
+  //       setSearchResults((prevResults) =>
+  //         prevResults.filter((result) => result.id !== selectedItem.id)
+  //       );
+  //       setSelectedItem(null); // Clear the selectedItem state
+  //     } catch (error) {
+  //       console.error("Error deleting item:", error);
+  //     }
+  //   };
+
+  //   deleteItem();
+  // }, [selectedItem, setSearchResults]);
 
   return (
-    <>
+    <React.Fragment>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -140,21 +144,10 @@ export function Search({
           height={"100vw"}
         >
           <Box>
-            <NavBar
-              setSearchTerm={setSearchTerm}
-              searchTerm={searchTerm}
-              handleSearch={handleSearch}
-            />
+            <NavBar />
           </Box>
-          {/* <Box sx={{ display: "flex", height: "100vw", flexDirection: "row" }}> */}
           {searchResults.map((result, index) => (
-            // eslint-disable-next-line react/jsx-key
-            <Card
-              sx={{
-                display: "grid",
-                flex: 0.1,
-              }}
-            >
+            <Card key={result.id} sx={{ display: "grid", flex: 0.1 }}>
               <CardContent
                 sx={{
                   display: "flex",
@@ -163,7 +156,6 @@ export function Search({
                   flexDirection: "row",
                 }}
               >
-                {/* 1 */}
                 <Box
                   sx={{
                     display: "flex",
@@ -179,8 +171,6 @@ export function Search({
                   />
                   <Typography marginInline={2}>{result.name}</Typography>
                 </Box>
-
-                {/* 2 */}
                 <Box
                   sx={{
                     display: "flex",
@@ -209,9 +199,16 @@ export function Search({
                     <Typography variant="body2" color="text.secondary">
                       Sizes
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.sizes[0]}
-                    </Typography>
+                    {result.sizes && (
+                      <Typography variant="body2" color="text.secondary">
+                        {result.sizes.map((size, index) => (
+                          <span key={index}>
+                            {size}
+                            {index !== result.sizes.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </Typography>
+                    )}
                   </Box>
                   <Box marginInline={2}>
                     <Typography variant="body2" color="text.secondary">
@@ -229,14 +226,21 @@ export function Search({
                       {result.category}
                     </Typography>
                   </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Colours
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.colors}
-                    </Typography>
-                  </Box>
+                  {result.colors && result.colors.length > 0 && (
+                    <Box marginInline={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Colors
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {result.colors.map((color, index) => (
+                          <span key={index}>
+                            {color}
+                            {index !== result.colors.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </Typography>
+                    </Box>
+                  )}
                   <Box marginInline={2}>
                     <Typography variant="body2" color="text.secondary">
                       Brand
@@ -262,7 +266,6 @@ export function Search({
                     </Typography>
                   </Box>
                 </Box>
-                {/* 3 */}
                 <Box
                   sx={{
                     display: "flex",
@@ -274,7 +277,7 @@ export function Search({
                   <CardActions>
                     <Button
                       size="small"
-                      onClick={() => handleUpdateClick(result)}
+                      onClick={() => handleOpenModal(result)}
                     >
                       Update
                     </Button>
@@ -289,23 +292,22 @@ export function Search({
               </CardContent>
             </Card>
           ))}
-          {/* </Box> */}
-          {/* Update form modal */}
-          {/* {selectedItem && <Typography>HELLO</Typography>} */}
+          <Box display="flex" justifyContent="center" marginTop={2}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+            />
+          </Box>
           {selectedItem && (
             <UpdateFormModal
               open={isUpdateModalOpen}
               onClose={handleCloseModal}
               selectedItem={selectedItem}
-              handleSubmit={function (data: any): void {
-                throw new Error("Function not implemented.");
-              }}
-              categories={[]}
-              colours={[]}
             />
           )}
         </Box>
       )}
-    </>
+    </React.Fragment>
   );
 }
