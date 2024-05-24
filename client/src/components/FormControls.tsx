@@ -36,14 +36,8 @@ const FormControls: React.FC<FormControlsProps> = ({
   categories,
   colors,
 }) => {
-  const handleColorChange = (value: string) => {
-    setSelectedColors((prevSelectedColors) => {
-      if (prevSelectedColors && prevSelectedColors.includes(value)) {
-        return prevSelectedColors.filter((color) => color !== value);
-      } else {
-        return prevSelectedColors ? [...prevSelectedColors, value] : [value];
-      }
-    });
+  const handleColorChange = (selectedColor: string[]) => {
+    setSelectedColors(selectedColor);
   };
 
   const handleSizeChange = (event: SelectChangeEvent<string[]>) => {
@@ -51,7 +45,7 @@ const FormControls: React.FC<FormControlsProps> = ({
     setSelectedSizes(selectedSizes);
   };
 
-  const handleSelectedGender = (event: SelectChangeEvent<string>) => {
+  const handleSelectedGender = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectedGender(event.target.value);
   };
 
@@ -60,7 +54,7 @@ const FormControls: React.FC<FormControlsProps> = ({
   };
 
   const handleCheckboxChange =
-    (setter: React.Dispatch<React.SetStateAction<boolean>>) =>
+    (setter: (value: boolean) => void) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.checked);
     };
@@ -82,25 +76,10 @@ const FormControls: React.FC<FormControlsProps> = ({
       />
       <FormControl required>
         <FormLabel>Gender</FormLabel>
-        <RadioGroup row name="gender">
-          <FormControlLabel
-            value="male"
-            onChange={handleSelectedGender}
-            control={<Radio />}
-            label="Male"
-          />
-          <FormControlLabel
-            value="female"
-            onChange={handleSelectedGender}
-            control={<Radio />}
-            label="Female"
-          />
-          <FormControlLabel
-            value="unisex"
-            onChange={handleSelectedGender}
-            control={<Radio />}
-            label="Unisex"
-          />
+        <RadioGroup row name="gender" onChange={handleSelectedGender}>
+          <FormControlLabel value="male" control={<Radio />} label="Male" />
+          <FormControlLabel value="female" control={<Radio />} label="Female" />
+          <FormControlLabel value="unisex" control={<Radio />} label="Unisex" />
         </RadioGroup>
       </FormControl>
       <TextField
@@ -137,7 +116,7 @@ const FormControls: React.FC<FormControlsProps> = ({
         fullWidth
         variant="standard"
         value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        onChange={(e) => setPrice(parseInt(e.target.value))}
       />
       <CategorySelect
         selectedCategory={selectedCategory}
@@ -195,13 +174,11 @@ const FormControls: React.FC<FormControlsProps> = ({
               key={color.value}
               control={
                 <Checkbox
-                  onChange={() => handleColorChange(color.value)}
-                  value={color.value}
-                  checked={
-                    selectedColors
-                      ? selectedColors.includes(color.value)
-                      : false
+                  onChange={() =>
+                    handleColorChange([...selectedColors, color.value])
                   }
+                  value={color.value}
+                  checked={selectedColors.includes(color.value)}
                 />
               }
               label={color.label}

@@ -35,7 +35,7 @@ const FormModal: React.FC = () => {
     setShippingPolicy,
     price,
     setPrice,
-  } = useGlobalState(); // Access values and functions from the context
+  } = useGlobalState();
 
   const [open, setOpen] = React.useState<boolean>(false);
 
@@ -60,7 +60,7 @@ const FormModal: React.FC = () => {
       }
       const data = await response.json();
       console.log("Data submitted successfully:", data);
-      // Clear out all the fields by resetting their state values
+
       setBrand("");
       setSelectedGender("");
       setSelectedCategory("");
@@ -113,6 +113,13 @@ const FormModal: React.FC = () => {
             setIsHidden={setIsHidden}
             categories={categories}
             colors={colors}
+            updatedAt={""}
+            createdAt={""}
+            category={""}
+            sizes={[]}
+            images={[]}
+            gender={""}
+            _id={""}
           />
           <ImageUrlField imageUrls={imageUrls} setImageUrls={setImageUrls} />
         </DialogContent>

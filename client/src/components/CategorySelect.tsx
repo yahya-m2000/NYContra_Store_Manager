@@ -19,7 +19,6 @@ const CategorySelect: React.FC<CategorySelectProps> = ({
     >
       {categories.map((category) => (
         <MenuItem
-          required
           key={category.value}
           value={category.value}
           onClick={() => setSelectedCategory(category.value)}

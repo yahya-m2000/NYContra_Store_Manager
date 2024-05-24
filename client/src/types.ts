@@ -1,14 +1,14 @@
 type GlobalState = {
   id: string;
+  setId: (value: string) => void;
   searchTerm: string;
-  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  setSearchTerm: (value: string) => void;
   formData: string;
   setFormData: (value: string) => void;
   brand: string;
   setBrand: (value: string) => void;
   selectedGender: string;
   setSelectedGender: (value: string) => void;
-  // Add other state variables and their setters here
   inStock: boolean;
   setInStock: (value: boolean) => void;
   isHidden: boolean;
@@ -29,8 +29,8 @@ type GlobalState = {
   setDescription: (value: string) => void;
   shippingPolicy: string;
   setShippingPolicy: (value: string) => void;
-  price: number | undefined;
-  setPrice: (value: number | undefined) => void;
+  price: number;
+  setPrice: (value: number) => void;
 };
 
 type Category = {
@@ -45,11 +45,11 @@ type Color = {
 };
 type ImageUrlFieldProps = {
   imageUrls: string[];
-  setImageUrls: React.Dispatch<React.SetStateAction<string[]>>;
+  setImageUrls: (value: string[]) => void;
 };
 type CategorySelectProps = {
   selectedCategory: string;
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedCategory: (value: string) => void;
   categories: Category[];
 };
 
@@ -57,32 +57,32 @@ type FormControlsProps = {
   updatedAt: string;
   createdAt: string;
   category: string;
-  sizes: any;
-  images: any;
+  sizes: string[];
+  images: string[];
   gender: string;
   _id: string;
   price: number;
-  setPrice: React.Dispatch<React.SetStateAction<number>>;
+  setPrice: (value: number) => void;
   name: string;
-  setName: React.Dispatch<React.SetStateAction<string>>;
+  setName: (value: string) => void;
   description: string;
-  setDescription: React.Dispatch<React.SetStateAction<string>>;
+  setDescription: (value: string) => void;
   shippingPolicy: string;
-  setShippingPolicy: React.Dispatch<React.SetStateAction<string>>;
+  setShippingPolicy: (value: string) => void;
   brand: string;
-  setBrand: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedGender: React.Dispatch<React.SetStateAction<string>>;
+  setBrand: (value: string) => void;
+  setSelectedGender: (value: string) => void;
   selectedGender: string;
   selectedCategory: string;
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedCategory: (value: string) => void;
   selectedColors: string[];
-  setSelectedColors: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedColors: (value: string[]) => void;
   selectedSizes: string[];
-  setSelectedSizes: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedSizes: (value: string[]) => void;
   inStock: boolean;
-  setInStock: React.Dispatch<React.SetStateAction<boolean>>;
+  setInStock: (value: boolean) => void;
   isHidden: boolean;
-  setIsHidden: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsHidden: (value: boolean) => void;
   categories: Category[];
   colors: Color[];
 };
@@ -105,13 +105,13 @@ type SearchResult = {
 };
 type SearchContextType = {
   searchResults: SearchResult[];
-  setSearchResults: React.Dispatch<React.SetStateAction<SearchResult[]>>;
+  setSearchResults: (value: SearchResult[]) => void;
   selectedItem: SearchResult | null;
-  setSelectedItem: React.Dispatch<React.SetStateAction<SearchResult | null>>;
+  setSelectedItem: (value: SearchResult | null) => void;
   loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoading: (value: boolean) => void;
   isUpdateModalOpen: boolean;
-  setUpdateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setUpdateModalOpen: (value: boolean) => void;
   setTotalPages: any;
   setCurrentPage: any;
   totalPages: any;

@@ -86,6 +86,7 @@ export default function Search() {
     const query = searchParams.get("name") || "all";
     const page = searchParams.get("page") || "1"; // Ensure page is a string
     fetchSearchResults(query, parseInt(page));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, setLoading, setSearchResults]);
 
   return (

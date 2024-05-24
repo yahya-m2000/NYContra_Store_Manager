@@ -14,21 +14,21 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   children,
 }) => {
   const [id, setId] = useState("");
-  const [formData, setFormData] = React.useState(""); // State to hold form data
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [formData, setFormData] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [brand, setBrand] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [inStock, setInStock] = useState(true);
   const [isHidden, setIsHidden] = useState(false);
-  const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [imageUrls, setImageUrls] = useState([""]);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [shippingPolicy, setShippingPolicy] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState<number>(0);
 
   const state: GlobalState = {
     id,
@@ -73,7 +73,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
 };
 
 // Custom hook to consume the global state
-export const useGlobalState = () => {
+export const useGlobalState = (): GlobalState => {
   const context = useContext(GlobalStateContext);
   if (context === undefined) {
     throw new Error("useGlobalState must be used within a GlobalStateProvider");

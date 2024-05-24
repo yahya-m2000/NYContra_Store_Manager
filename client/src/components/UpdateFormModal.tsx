@@ -9,6 +9,7 @@ import {
 import FormControls from "./FormControls";
 import { colors, categories } from "../constants";
 import { useGlobalState } from "@/context/GlobalStateContext";
+import ImageUrlField from "./ImageURLField";
 
 interface UpdateFormModalProps {
   open: boolean;
@@ -68,6 +69,7 @@ const UpdateFormModal: React.FC<UpdateFormModalProps> = ({
       setSelectedCategory(selectedItem.selectedCategory);
       setImageUrls(selectedItem.imageUrls);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem]); // Run effect when selectedItem changes
 
   const handleSubmit = async (formData: any) => {
@@ -152,9 +154,15 @@ const UpdateFormModal: React.FC<UpdateFormModalProps> = ({
           setIsHidden={setIsHidden}
           categories={categories}
           colors={colors}
-          imageUrls={imageUrls}
-          setImageUrls={setImageUrls}
+          images={[]}
+          updatedAt={""}
+          createdAt={""}
+          category={""}
+          sizes={[]}
+          gender={""}
+          _id={""}
         />
+        <ImageUrlField imageUrls={imageUrls} setImageUrls={setImageUrls} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
