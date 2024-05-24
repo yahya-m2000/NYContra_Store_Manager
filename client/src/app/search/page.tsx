@@ -1,5 +1,4 @@
 "use client";
-"force-dynamic";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { SearchContext } from "@/context/SearchContext";
