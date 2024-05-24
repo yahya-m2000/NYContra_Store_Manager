@@ -1,4 +1,5 @@
 "use client";
+"dynamic";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { SearchContext } from "@/context/SearchContext";
@@ -14,9 +15,6 @@ import {
 } from "@mui/material";
 import NavBar from "../../components/NavBar";
 import UpdateFormModal from "../../components/UpdateFormModal";
-
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
 
 export default function Search() {
   const {
@@ -93,8 +91,8 @@ export default function Search() {
   }, [searchParams, setLoading, setSearchResults]);
 
   return (
-    <React.Suspense fallback={<>Loading...</>}>
-      <React.Fragment>
+    <React.Fragment>
+      <React.Suspense fallback={<>Loading...</>}>
         {/* {loading ? (
           <p>Loading...</p>
         ) : ( */}
@@ -269,7 +267,7 @@ export default function Search() {
           )}
         </Box>
         {/* )} */}
-      </React.Fragment>
-    </React.Suspense>
+      </React.Suspense>
+    </React.Fragment>
   );
 }
