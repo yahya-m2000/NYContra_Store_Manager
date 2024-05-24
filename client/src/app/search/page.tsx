@@ -90,8 +90,8 @@ export default function Search() {
   }, [searchParams, setLoading, setSearchResults]);
 
   return (
-    <React.Fragment>
-      <React.Suspense>
+    <React.Suspense>
+      <React.Fragment>
         {loading ? (
           <p>Loading...</p>
         ) : (
@@ -266,7 +266,7 @@ export default function Search() {
             )}
           </Box>
         )}
-      </React.Suspense>
-    </React.Fragment>
+      </React.Fragment>
+    </React.Suspense>
   );
 }
