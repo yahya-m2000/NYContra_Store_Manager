@@ -38,33 +38,16 @@ export default function Search() {
     setUpdateModalOpen(false);
   };
 
-  const handleOpenModal = (item: SearchContextType) => {
+  const handleOpenModal = (item: SearchResult) => {
     setSelectedItem(item);
     setUpdateModalOpen(true);
     console.log("Updating item:", item);
   };
 
-  const handleDeleteClick = async (item: SearchContextType) => {
+  const handleDeleteClick = async (item: SearchResult) => {
+    setSelectedItem(item);
     console.log("Deleting item:", item);
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/?id=${item.id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to delete item");
-      }
-      // Remove the deleted item from the search results
-      setSearchResults((prevResults) =>
-        prevResults.filter((result) => result.id !== item.id)
-      );
-    } catch (error) {
-      console.error("Error deleting item:", error);
-    }
   };
-
   const fetchSearchResults = async (query: string, page: number) => {
     try {
       const limit = 10; // You can set this to any value you prefer
@@ -104,8 +87,6 @@ export default function Search() {
     const page = searchParams.get("page") || 1;
     fetchSearchResults(query, parseInt(page));
   }, [searchParams, setLoading, setSearchResults]);
-
-  // React.useEffect(() => {
   //   if (!selectedItem) return;
 
   //   const deleteItem = async () => {
