@@ -15,6 +15,9 @@ import {
 import NavBar from "../../components/NavBar";
 import UpdateFormModal from "../../components/UpdateFormModal";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 export default function Search() {
   const {
     setTotalPages,
