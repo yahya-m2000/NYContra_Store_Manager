@@ -91,180 +91,182 @@ export default function Search() {
 
   return (
     <React.Fragment>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          flex={1}
-          height={"100vw"}
-        >
-          <Box>
-            <NavBar />
-          </Box>
-          {searchResults.map((result, index) => (
-            <Card key={result.id} sx={{ display: "grid", flex: 0.1 }}>
-              <CardContent
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                }}
-              >
-                <Box
+      <React.Suspense>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            flex={1}
+            height={"100vw"}
+          >
+            <Box>
+              <NavBar />
+            </Box>
+            {searchResults.map((result, index) => (
+              <Card key={result.id} sx={{ display: "grid", flex: 0.1 }}>
+                <CardContent
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     flexDirection: "row",
                   }}
                 >
-                  <CardMedia
-                    sx={{ height: 100, width: 100 }}
-                    image={result.images[0]}
-                    title="results"
-                  />
-                  <Typography marginInline={2}>{result.name}</Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                  }}
-                >
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Description
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.description}
-                    </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <CardMedia
+                      sx={{ height: 100, width: 100 }}
+                      image={result.images[0]}
+                      title="results"
+                    />
+                    <Typography marginInline={2}>{result.name}</Typography>
                   </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Price
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.price}
-                    </Typography>
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Sizes
-                    </Typography>
-                    {result.sizes && (
-                      <Typography variant="body2" color="text.secondary">
-                        {result.sizes.map((size, index) => (
-                          <span key={index}>
-                            {size}
-                            {index !== result.sizes.length - 1 && ", "}
-                          </span>
-                        ))}
-                      </Typography>
-                    )}
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Gender
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.gender}
-                    </Typography>
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Category
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.category}
-                    </Typography>
-                  </Box>
-                  {result.colors && result.colors.length > 0 && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                    }}
+                  >
                     <Box marginInline={2}>
                       <Typography variant="body2" color="text.secondary">
-                        Colors
+                        Description
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {result.colors.map((color, index) => (
-                          <span key={index}>
-                            {color}
-                            {index !== result.colors.length - 1 && ", "}
-                          </span>
-                        ))}
+                        {result.description}
                       </Typography>
                     </Box>
-                  )}
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Brand
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.brand}
-                    </Typography>
+                    <Box marginInline={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Price
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {result.price}
+                      </Typography>
+                    </Box>
+                    <Box marginInline={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Sizes
+                      </Typography>
+                      {result.sizes && (
+                        <Typography variant="body2" color="text.secondary">
+                          {result.sizes.map((size, index) => (
+                            <span key={index}>
+                              {size}
+                              {index !== result.sizes.length - 1 && ", "}
+                            </span>
+                          ))}
+                        </Typography>
+                      )}
+                    </Box>
+                    <Box marginInline={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Gender
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {result.gender}
+                      </Typography>
+                    </Box>
+                    <Box marginInline={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Category
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {result.category}
+                      </Typography>
+                    </Box>
+                    {result.colors && result.colors.length > 0 && (
+                      <Box marginInline={2}>
+                        <Typography variant="body2" color="text.secondary">
+                          Colors
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {result.colors.map((color, index) => (
+                            <span key={index}>
+                              {color}
+                              {index !== result.colors.length - 1 && ", "}
+                            </span>
+                          ))}
+                        </Typography>
+                      </Box>
+                    )}
+                    <Box marginInline={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Brand
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {result.brand}
+                      </Typography>
+                    </Box>
+                    <Box marginInline={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Created
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {result.createdAt}
+                      </Typography>
+                    </Box>
+                    <Box marginInline={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Updated
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {result.updatedAt}
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Created
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.createdAt}
-                    </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <CardActions>
+                      <Button
+                        size="small"
+                        onClick={() => handleOpenModal(result)}
+                      >
+                        Update
+                      </Button>
+                      <Button
+                        size="small"
+                        onClick={() => handleDeleteClick(result)}
+                      >
+                        Delete
+                      </Button>
+                    </CardActions>
                   </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Updated
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.updatedAt}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                  }}
-                >
-                  <CardActions>
-                    <Button
-                      size="small"
-                      onClick={() => handleOpenModal(result)}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={() => handleDeleteClick(result)}
-                    >
-                      Delete
-                    </Button>
-                  </CardActions>
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
-          <Box display="flex" justifyContent="center" marginTop={2}>
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-            />
+                </CardContent>
+              </Card>
+            ))}
+            <Box display="flex" justifyContent="center" marginTop={2}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+              />
+            </Box>
+            {selectedItem && (
+              <UpdateFormModal
+                open={isUpdateModalOpen}
+                onClose={handleCloseModal}
+                selectedItem={selectedItem}
+              />
+            )}
           </Box>
-          {selectedItem && (
-            <UpdateFormModal
-              open={isUpdateModalOpen}
-              onClose={handleCloseModal}
-              selectedItem={selectedItem}
-            />
-          )}
-        </Box>
-      )}
+        )}
+      </React.Suspense>
     </React.Fragment>
   );
 }
