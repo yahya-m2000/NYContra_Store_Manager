@@ -63,7 +63,8 @@ const SearchBar: React.FC = ({}) => {
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
       const query = encodeURIComponent(searchTerm.trim());
-      router.push(`/search?name=${query}`);
+      // router.push(`/search?name=${query}`);
+      router.push(`/search`);
     }
   };
 
