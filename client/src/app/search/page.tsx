@@ -48,6 +48,7 @@ export default function Search() {
     setSelectedItem(item);
     console.log("Deleting item:", item);
   };
+
   const fetchSearchResults = async (query: string, page: number) => {
     try {
       const limit = 10; // You can set this to any value you prefer
@@ -92,9 +93,6 @@ export default function Search() {
   return (
     <React.Fragment>
       <React.Suspense fallback={<>Loading...</>}>
-        {/* {loading ? (
-          <p>Loading...</p>
-        ) : ( */}
         <Box
           display={"flex"}
           flexDirection={"column"}
@@ -265,7 +263,6 @@ export default function Search() {
             />
           )}
         </Box>
-        {/* )} */}
       </React.Suspense>
     </React.Fragment>
   );
