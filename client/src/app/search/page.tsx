@@ -31,7 +31,7 @@ export default function Search() {
     setUpdateModalOpen,
   } = React.useContext(SearchContext) as SearchContextType;
 
-  const searchParams = useSearchParams();
+  //   const searchParams = useSearchParams();
 
   const handleCloseModal = () => {
     setSelectedItem(null);
@@ -48,7 +48,7 @@ export default function Search() {
     setSelectedItem(item);
     console.log("Deleting item:", item);
   };
-  const fetchSearchResults = async (query: any, page: any) => {
+  const fetchSearchResults = async (query: string, page: number) => {
     try {
       const limit = 10; // You can set this to any value you prefer
       const url =
@@ -72,19 +72,22 @@ export default function Search() {
     }
   };
 
-  const handlePageChange = (event: any, newPage: any) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    newPage: number
+  ) => {
     const queryParams = new URLSearchParams(window.location.search);
     queryParams.set("page", newPage.toString());
     window.history.pushState({}, "", `?${queryParams.toString()}`);
     fetchSearchResults(queryParams.get("name") || "all", newPage);
   };
 
-  React.useEffect(() => {
-    const query = searchParams.get("name") || "all";
-    const page = searchParams.get("page") || "1"; // Ensure page is a string
-    fetchSearchResults(query, parseInt(page));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  //   React.useEffect(() => {
+  //     const query = searchParams.get("name") || "all";
+  //     const page = searchParams.get("page") || "1"; // Ensure page is a string
+  //     fetchSearchResults(query, parseInt(page));
+  //     // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   }, [searchParams]);
 
   if (loading) {
     return <p>Loading...</p>;
