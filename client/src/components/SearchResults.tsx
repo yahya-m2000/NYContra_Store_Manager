@@ -43,8 +43,29 @@ const SearchResults = () => {
   };
 
   const handleDeleteClick = async (item: SearchResult | null) => {
-    setSelectedItem(item);
-    console.log("Deleting item:", item);
+    if (!item) return;
+
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/?id=${item.id}`;
+
+      const response = await fetch(url, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete item");
+      }
+      //@ts-ignore
+      setSearchResults((prevResults) =>
+        (prevResults as SearchResult[]).filter(
+          (result: SearchResult) => result.id !== item.id
+        )
+      );
+
+      console.log("Deleted item:", item);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
   const fetchSearchResults = async (query: string, page: number) => {
