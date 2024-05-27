@@ -52,8 +52,8 @@ const SearchResults = () => {
       const limit = 10; // You can set this to any value you prefer
       const url =
         query === "all"
-          ? `?page=${page}&limit=${limit}`
-          : `/?name=${query}&page=${page}&limit=${limit}`;
+          ? `${process.env.NEXT_PUBLIC_API_URL}?page=${page}&limit=${limit}`
+          : `${process.env.NEXT_PUBLIC_API_URL}/?name=${query}&page=${page}&limit=${limit}`;
 
       const response = await fetch(url);
       if (!response.ok) {
