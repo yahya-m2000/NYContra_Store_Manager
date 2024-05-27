@@ -105,7 +105,7 @@ type SearchResult = {
 };
 type SearchContextType = {
   searchResults: SearchResult[];
-  setSearchResults: (value: SearchResult[] | null) => void;
+  setSearchResults: (value: SearchResult[]) => void;
   selectedItem: SearchResult | null;
   setSelectedItem: (value: SearchResult | null) => void;
   loading: boolean;
