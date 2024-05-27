@@ -1,272 +1,282 @@
-"use client";
-import * as React from "react";
-import { useSearchParams } from "next/navigation";
-import { SearchContext } from "@/context/SearchContext";
-import {
-  Box,
-  Typography,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Card,
-  Button,
-  Pagination,
-} from "@mui/material";
-import NavBar from "../../components/NavBar";
-import UpdateFormModal from "../../components/UpdateFormModal";
+import React from "react";
 
-export default function Search() {
-  const {
-    setTotalPages,
-    setCurrentPage,
-    totalPages,
-    currentPage,
-    searchResults,
-    setSearchResults,
-    selectedItem,
-    setSelectedItem,
-    loading,
-    setLoading,
-    isUpdateModalOpen,
-    setUpdateModalOpen,
-  } = React.useContext(SearchContext) as SearchContextType;
+type Props = {};
 
-  const searchParams = useSearchParams();
+const Search = (props: Props) => {
+  return <div>Search</div>;
+};
 
-  const handleCloseModal = () => {
-    setSelectedItem(null);
-    setUpdateModalOpen(false);
-  };
+export default Search;
 
-  const handleOpenModal = (item: SearchResult) => {
-    setSelectedItem(item);
-    setUpdateModalOpen(true);
-    console.log("Updating item:", item);
-  };
+// "use client";
+// import * as React from "react";
+// import { useSearchParams } from "next/navigation";
+// import { SearchContext } from "@/context/SearchContext";
+// import {
+//   Box,
+//   Typography,
+//   CardMedia,
+//   CardContent,
+//   CardActions,
+//   Card,
+//   Button,
+//   Pagination,
+// } from "@mui/material";
+// import NavBar from "../../components/NavBar";
+// import UpdateFormModal from "../../components/UpdateFormModal";
 
-  const handleDeleteClick = async (item: SearchResult) => {
-    setSelectedItem(item);
-    console.log("Deleting item:", item);
-  };
-  const fetchSearchResults = async (query: string, page: number) => {
-    try {
-      const limit = 10; // You can set this to any value you prefer
-      const url =
-        query === "all"
-          ? `${process.env.NEXT_PUBLIC_API_URL}?page=${page}&limit=${limit}`
-          : `${process.env.NEXT_PUBLIC_API_URL}/?name=${query}&page=${page}&limit=${limit}`;
+// export default function Search() {
+//   const {
+//     setTotalPages,
+//     setCurrentPage,
+//     totalPages,
+//     currentPage,
+//     searchResults,
+//     setSearchResults,
+//     selectedItem,
+//     setSelectedItem,
+//     loading,
+//     setLoading,
+//     isUpdateModalOpen,
+//     setUpdateModalOpen,
+//   } = React.useContext(SearchContext) as SearchContextType;
 
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch search results");
-      }
+//   const searchParams = useSearchParams();
 
-      const data = await response.json();
-      setSearchResults(data.products);
-      setTotalPages(data.totalPages);
-      setCurrentPage(data.currentPage);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-      setLoading(false);
-    }
-  };
+//   const handleCloseModal = () => {
+//     setSelectedItem(null);
+//     setUpdateModalOpen(false);
+//   };
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    newPage: number
-  ) => {
-    const queryParams = new URLSearchParams(window.location.search);
-    queryParams.set("page", newPage.toString());
-    window.history.pushState({}, "", `?${queryParams.toString()}`);
-    fetchSearchResults(queryParams.get("name") || "all", newPage);
-  };
+//   const handleOpenModal = (item: SearchResult) => {
+//     setSelectedItem(item);
+//     setUpdateModalOpen(true);
+//     console.log("Updating item:", item);
+//   };
 
-  React.useEffect(() => {
-    const query = searchParams.get("name") || "all";
-    const page = searchParams.get("page") || "1"; // Ensure page is a string
-    fetchSearchResults(query, parseInt(page));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, setLoading, setSearchResults]);
+//   const handleDeleteClick = async (item: SearchResult) => {
+//     setSelectedItem(item);
+//     console.log("Deleting item:", item);
+//   };
+//   const fetchSearchResults = async (query: string, page: number) => {
+//     try {
+//       const limit = 10; // You can set this to any value you prefer
+//       const url =
+//         query === "all"
+//           ? `${process.env.NEXT_PUBLIC_API_URL}?page=${page}&limit=${limit}`
+//           : `${process.env.NEXT_PUBLIC_API_URL}/?name=${query}&page=${page}&limit=${limit}`;
 
-  return (
-    <React.Fragment>
-      <React.Suspense fallback={<>Loading...</>}>
-        {/* {loading ? (
-          <p>Loading...</p>
-        ) : ( */}
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          flex={1}
-          height={"100vw"}
-        >
-          <Box>
-            <NavBar />
-          </Box>
-          {searchResults.map((result, index) => (
-            <Card key={result.id} sx={{ display: "grid", flex: 0.1 }}>
-              <CardContent
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                  }}
-                >
-                  <CardMedia
-                    sx={{ height: 100, width: 100 }}
-                    image={result.images[0]}
-                    title="results"
-                  />
-                  <Typography marginInline={2}>{result.name}</Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                  }}
-                >
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Description
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.description}
-                    </Typography>
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Price
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.price}
-                    </Typography>
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Sizes
-                    </Typography>
-                    {result.sizes && (
-                      <Typography variant="body2" color="text.secondary">
-                        {result.sizes.map((size, index) => (
-                          <span key={index}>
-                            {size}
-                            {index !== result.sizes.length - 1 && ", "}
-                          </span>
-                        ))}
-                      </Typography>
-                    )}
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Gender
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.gender}
-                    </Typography>
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Category
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.category}
-                    </Typography>
-                  </Box>
-                  {result.colors && result.colors.length > 0 && (
-                    <Box marginInline={2}>
-                      <Typography variant="body2" color="text.secondary">
-                        Colors
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {result.colors.map((color, index) => (
-                          <span key={index}>
-                            {color}
-                            {index !== result.colors.length - 1 && ", "}
-                          </span>
-                        ))}
-                      </Typography>
-                    </Box>
-                  )}
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Brand
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.brand}
-                    </Typography>
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Created
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.createdAt}
-                    </Typography>
-                  </Box>
-                  <Box marginInline={2}>
-                    <Typography variant="body2" color="text.secondary">
-                      Updated
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.updatedAt}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                  }}
-                >
-                  <CardActions>
-                    <Button
-                      size="small"
-                      onClick={() => handleOpenModal(result)}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={() => handleDeleteClick(result)}
-                    >
-                      Delete
-                    </Button>
-                  </CardActions>
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
-          <Box display="flex" justifyContent="center" marginTop={2}>
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-            />
-          </Box>
-          {selectedItem && (
-            <UpdateFormModal
-              open={isUpdateModalOpen}
-              onClose={handleCloseModal}
-              selectedItem={selectedItem}
-            />
-          )}
-        </Box>
-        {/* )} */}
-      </React.Suspense>
-    </React.Fragment>
-  );
-}
+//       const response = await fetch(url);
+//       if (!response.ok) {
+//         throw new Error("Failed to fetch search results");
+//       }
+
+//       const data = await response.json();
+//       setSearchResults(data.products);
+//       setTotalPages(data.totalPages);
+//       setCurrentPage(data.currentPage);
+//       setLoading(false);
+//     } catch (error) {
+//       console.error("Error fetching search results:", error);
+//       setLoading(false);
+//     }
+//   };
+
+//   const handlePageChange = (
+//     event: React.ChangeEvent<unknown>,
+//     newPage: number
+//   ) => {
+//     const queryParams = new URLSearchParams(window.location.search);
+//     queryParams.set("page", newPage.toString());
+//     window.history.pushState({}, "", `?${queryParams.toString()}`);
+//     fetchSearchResults(queryParams.get("name") || "all", newPage);
+//   };
+
+//   React.useEffect(() => {
+//     const query = searchParams.get("name") || "all";
+//     const page = searchParams.get("page") || "1"; // Ensure page is a string
+//     fetchSearchResults(query, parseInt(page));
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [searchParams, setLoading, setSearchResults]);
+
+//   return (
+//     <React.Fragment>
+//       <React.Suspense fallback={<>Loading...</>}>
+//         {/* {loading ? (
+//           <p>Loading...</p>
+//         ) : ( */}
+//         <Box
+//           display={"flex"}
+//           flexDirection={"column"}
+//           flex={1}
+//           height={"100vw"}
+//         >
+//           <Box>
+//             <NavBar />
+//           </Box>
+//           {searchResults.map((result, index) => (
+//             <Card key={result.id} sx={{ display: "grid", flex: 0.1 }}>
+//               <CardContent
+//                 sx={{
+//                   display: "flex",
+//                   alignItems: "center",
+//                   justifyContent: "space-between",
+//                   flexDirection: "row",
+//                 }}
+//               >
+//                 <Box
+//                   sx={{
+//                     display: "flex",
+//                     alignItems: "center",
+//                     justifyContent: "center",
+//                     flexDirection: "row",
+//                   }}
+//                 >
+//                   <CardMedia
+//                     sx={{ height: 100, width: 100 }}
+//                     image={result.images[0]}
+//                     title="results"
+//                   />
+//                   <Typography marginInline={2}>{result.name}</Typography>
+//                 </Box>
+//                 <Box
+//                   sx={{
+//                     display: "flex",
+//                     alignItems: "center",
+//                     justifyContent: "center",
+//                     flexDirection: "row",
+//                   }}
+//                 >
+//                   <Box marginInline={2}>
+//                     <Typography variant="body2" color="text.secondary">
+//                       Description
+//                     </Typography>
+//                     <Typography variant="body2" color="text.secondary">
+//                       {result.description}
+//                     </Typography>
+//                   </Box>
+//                   <Box marginInline={2}>
+//                     <Typography variant="body2" color="text.secondary">
+//                       Price
+//                     </Typography>
+//                     <Typography variant="body2" color="text.secondary">
+//                       {result.price}
+//                     </Typography>
+//                   </Box>
+//                   <Box marginInline={2}>
+//                     <Typography variant="body2" color="text.secondary">
+//                       Sizes
+//                     </Typography>
+//                     {result.sizes && (
+//                       <Typography variant="body2" color="text.secondary">
+//                         {result.sizes.map((size, index) => (
+//                           <span key={index}>
+//                             {size}
+//                             {index !== result.sizes.length - 1 && ", "}
+//                           </span>
+//                         ))}
+//                       </Typography>
+//                     )}
+//                   </Box>
+//                   <Box marginInline={2}>
+//                     <Typography variant="body2" color="text.secondary">
+//                       Gender
+//                     </Typography>
+//                     <Typography variant="body2" color="text.secondary">
+//                       {result.gender}
+//                     </Typography>
+//                   </Box>
+//                   <Box marginInline={2}>
+//                     <Typography variant="body2" color="text.secondary">
+//                       Category
+//                     </Typography>
+//                     <Typography variant="body2" color="text.secondary">
+//                       {result.category}
+//                     </Typography>
+//                   </Box>
+//                   {result.colors && result.colors.length > 0 && (
+//                     <Box marginInline={2}>
+//                       <Typography variant="body2" color="text.secondary">
+//                         Colors
+//                       </Typography>
+//                       <Typography variant="body2" color="text.secondary">
+//                         {result.colors.map((color, index) => (
+//                           <span key={index}>
+//                             {color}
+//                             {index !== result.colors.length - 1 && ", "}
+//                           </span>
+//                         ))}
+//                       </Typography>
+//                     </Box>
+//                   )}
+//                   <Box marginInline={2}>
+//                     <Typography variant="body2" color="text.secondary">
+//                       Brand
+//                     </Typography>
+//                     <Typography variant="body2" color="text.secondary">
+//                       {result.brand}
+//                     </Typography>
+//                   </Box>
+//                   <Box marginInline={2}>
+//                     <Typography variant="body2" color="text.secondary">
+//                       Created
+//                     </Typography>
+//                     <Typography variant="body2" color="text.secondary">
+//                       {result.createdAt}
+//                     </Typography>
+//                   </Box>
+//                   <Box marginInline={2}>
+//                     <Typography variant="body2" color="text.secondary">
+//                       Updated
+//                     </Typography>
+//                     <Typography variant="body2" color="text.secondary">
+//                       {result.updatedAt}
+//                     </Typography>
+//                   </Box>
+//                 </Box>
+//                 <Box
+//                   sx={{
+//                     display: "flex",
+//                     alignItems: "center",
+//                     justifyContent: "center",
+//                     flexDirection: "row",
+//                   }}
+//                 >
+//                   <CardActions>
+//                     <Button
+//                       size="small"
+//                       onClick={() => handleOpenModal(result)}
+//                     >
+//                       Update
+//                     </Button>
+//                     <Button
+//                       size="small"
+//                       onClick={() => handleDeleteClick(result)}
+//                     >
+//                       Delete
+//                     </Button>
+//                   </CardActions>
+//                 </Box>
+//               </CardContent>
+//             </Card>
+//           ))}
+//           <Box display="flex" justifyContent="center" marginTop={2}>
+//             <Pagination
+//               count={totalPages}
+//               page={currentPage}
+//               onChange={handlePageChange}
+//             />
+//           </Box>
+//           {selectedItem && (
+//             <UpdateFormModal
+//               open={isUpdateModalOpen}
+//               onClose={handleCloseModal}
+//               selectedItem={selectedItem}
+//             />
+//           )}
+//         </Box>
+//         {/* )} */}
+//       </React.Suspense>
+//     </React.Fragment>
+//   );
+// }
