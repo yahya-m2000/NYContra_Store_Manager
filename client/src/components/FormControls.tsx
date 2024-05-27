@@ -25,7 +25,7 @@ const FormControls: React.FC<FormControlsProps> = ({
   selectedGender,
   selectedCategory,
   setSelectedCategory,
-  selectedColors,
+  selectedColors = [],
   setSelectedColors,
   selectedSizes,
   setSelectedSizes,

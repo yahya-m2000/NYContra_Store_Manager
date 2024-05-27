@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 
 const ImageUrlField: React.FC<ImageUrlFieldProps> = ({
-  imageUrls, // Provide a default empty array if imageUrls is undefined
+  imageUrls = [], // Provide a default empty array if imageUrls is undefined
   setImageUrls,
 }) => {
   const handleImageUrlChange =
