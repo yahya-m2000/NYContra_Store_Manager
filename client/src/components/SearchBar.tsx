@@ -63,10 +63,10 @@ const SearchBar: React.FC = ({}) => {
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
       const query = encodeURIComponent(searchTerm.trim());
-      console.log("Before redirect");
+      console.log(`Before redirect URL ${window.location}`);
       router.refresh();
       router.push(`/search?name=${query}`);
-      console.log("After redirect");
+      console.log(`After redirect URL ${window.location}`);
       // router.push(`/search`);
     }
   };
